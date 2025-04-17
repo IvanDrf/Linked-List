@@ -21,7 +21,6 @@
 *.dll
 
 # Fortran module files
-*.mod
 *.smod
 
 # Compiled Static libraries
@@ -77,6 +76,14 @@
 # .idea/modules
 # *.iml
 # *.ipr
+
+# Go
+/go/bin/
+/go/pkg/
+*.exe
+*.test
+*.prof
+*.out
 
 # CMake
 cmake-build-*/

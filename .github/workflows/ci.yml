@@ -5,18 +5,60 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: g++ -std=c++20 -Wall -Wextra -Werror -Wpedantic *.cpp
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y g++
+      - name: Build C++ project
+        working-directory: ./cpp
+        run: |
+          g++ -std=c++20 -Wall -Wextra -Werror -Wpedantic -I. LinkedList/LinkedList.cpp main.cpp -o main
 
   clang-format:
     runs-on: ubuntu-latest
     container: ghcr.io/cpp-linter/clang-tools:18
     steps:
-    - uses: actions/checkout@v4
-    - run: clang-format --dry-run -Werror *.cpp
+      - uses: actions/checkout@v4
+      - name: Check C++ formatting
+        working-directory: ./cpp
+        run: |
+          find . -name '*.cpp' -o -name '*.hpp' | xargs clang-format --dry-run -Werror
 
   clang-tidy:
     runs-on: ubuntu-latest
     container: ghcr.io/cpp-linter/clang-tools:18
     steps:
-    - uses: actions/checkout@v4
-    - run: clang-tidy *.cpp
+      - uses: actions/checkout@v4
+      - name: Analyze C++ files
+        working-directory: ./cpp
+        run: |
+          find . -name '*.cpp' -o -name '*.hpp' | xargs clang-tidy
+
+  go-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
+      - name: Check Go formatting
+        working-directory: ./go
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "❌ Неотформатированные Go файлы:"
+            echo "$unformatted"
+            exit 1
+          fi
+          echo "✅ Все Go файлы правильно отформатированы"
+
+  go-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
+      - name: Build Go project
+        working-directory: ./go
+        run: |
+          go build ./...
+          echo "✅ Go проект успешно собирается"

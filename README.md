@@ -1,5 +1,5 @@
 # Linked List ![C++](https://img.shields.io/badge/-С++-090909?style=for-the-badge&logo=C%2b%2b&logoColor=6296CC)
-Realization of a linked list with some methods in C++
+Realization of a linked list with some methods in C++/GO
 
 ![alt text](https://media.geeksforgeeks.org/wp-content/uploads/20231130131446/Linked-List-Data-Structure-768.png)
 
